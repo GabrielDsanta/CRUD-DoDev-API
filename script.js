@@ -18,25 +18,69 @@ class Carro {
         this.Valor = valor;
     }
 }
-const NewCarro = new Carro("ford", "fordka", "Casual", 200, 30000, 110000);
+let Continuar = true;
+while (Continuar) {
+    let Pergunta = String(prompt("1 Ver Carros /// 2 Adicionar Carro /// 3 Atualizar Carro /// 4 Deletar Carro /// 5 Finalizar Programa"));
+    switch (Pergunta) {
+        case "1":
+            Get();
+            break;
+        case "2":
+            let Marca = String(prompt("Qual o Marca do Carro ?"));
+            let Modelo = String(prompt("Qual o Modelo do Carro ?"));
+            let Categoria = String(prompt("Qual a Categoria do Carro ?"));
+            let Ano = Number(prompt("Qual o Ano do Carro ?"));
+            let Km = Number(prompt("Qual os Km Rodados do Carro ?"));
+            let Valor = Number(prompt("Qual o Valor do Carro ?"));
+            const NewCarro = new Carro(Marca, Modelo, Categoria, Ano, Km, Valor);
+            postData('https://apigenerator.dronahq.com/api/_QipxZpA/CRUDDoDev/', NewCarro)
+                .then((data) => {
+                console.log(data);
+            });
+            break;
+        case "3":
+            break;
+        case "4":
+            let IdCarDelete = Number(prompt("Qual o ID do Carro ?"));
+            deleteData(IdCarDelete);
+            break;
+        case "5":
+            Continuar = false;
+            break;
+        default:
+            alert("Opção Inválida");
+            break;
+    }
+}
 // Exemplo De Uso Das Function//
-putData(3, NewCarro)
-    .then((data) => {
-    console.log(data);
-});
+// putData(3 /*id*/ , NewCarro /*Object*/)
+// .then((data) => {
+//     console.log(data);
+// });
 function Get() {
     return fetch('https://apigenerator.dronahq.com/api/_QipxZpA/CRUDDoDev')
         .then((response) => response.json())
         .then((data) => console.log(data));
 }
 function GetElementById(id) {
-    return fetch(`https://apigenerator.dronahq.com/api/_QipxZpA/CRUDDoDev/${id}`)
+    fetch(`https://apigenerator.dronahq.com/api/_QipxZpA/CRUDDoDev/${id}`)
         .then((response) => response.json())
         .then((data) => console.log(data));
 }
-function postData(id, data = {}) {
+function GetCarList() {
+    let ListaCarros = [];
+    fetch('https://apigenerator.dronahq.com/api/_QipxZpA/CRUDDoDev')
+        .then((response) => response.json())
+        .then((data) => {
+        for (let index = 0; index < data.length; index++) {
+            ListaCarros.push(data[index].Modelo);
+        }
+    });
+    console.log(ListaCarros);
+}
+function postData(url = '', data = {}) {
     return __awaiter(this, void 0, void 0, function* () {
-        const response = yield fetch(`https://apigenerator.dronahq.com/api/_QipxZpA/CRUDDoDev/${id}`, {
+        const response = yield fetch(`https://apigenerator.dronahq.com/api/_QipxZpA/CRUDDoDev/`, {
             method: 'POST',
             mode: 'cors',
             cache: 'no-cache',
