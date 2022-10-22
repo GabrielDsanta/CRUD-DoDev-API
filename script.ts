@@ -22,7 +22,7 @@ class Carro{
 let Continuar = true
 
 while(Continuar){
-    let Pergunta = String(prompt("1 Ver Carros /// 2 Adicionar Carro /// 3 Atualizar Carro /// 4 Deletar Carro /// 5 Finalizar Programa"))
+    let Pergunta = String(prompt("1 Ver Carros /// 2 Ver Carro por ID /// 3 Adicionar Carro /// 4 Atualizar Carro /// 5 Deletar Carro /// 5 Finalizar Programa"))
     switch(Pergunta){
 
         case "1":
@@ -30,21 +30,24 @@ while(Continuar){
         break;
 
         case "2":
-        let Marca = String(prompt("Qual o Marca do Carro ?"))
-        let Modelo = String(prompt("Qual o Modelo do Carro ?"))
-        let Categoria = String(prompt("Qual a Categoria do Carro ?"))
-        let Ano = Number(prompt("Qual o Ano do Carro ?"))
-        let Km = Number(prompt("Qual os Km Rodados do Carro ?"))
-        let Valor = Number(prompt("Qual o Valor do Carro ?"))
-
-        const NewCarro = new Carro(Marca, Modelo, Categoria, Ano, Km, Valor)
-        postData('https://apigenerator.dronahq.com/api/_QipxZpA/CRUDDoDev/', NewCarro)
-            .then((data) => {
-            console.log(data);
-        });
+        let IdCar = Number(prompt("Qual o ID do Carro ?"))
+        GetElementById(IdCar)
         break;
 
         case "3":
+        let IdCarPut = Number(prompt("Qual o ID do Carro ?"))
+        const Marca = String(prompt("Qual a Marca do Carro ?"))
+        const Modelo = String(prompt("Qual o Modelo do Carro ?"))
+        const Categoria = String(prompt("Qual a Categoria do Carro ?"))
+        const Ano = Number(prompt("Qual o Ano do Carro ?"))
+        const Km = Number(prompt("Qual o Km do Carro ?"))
+        const Valor = Number(prompt("Qual o Valor do Carro ?"))
+
+        const NewCarroPut = new Carro(Marca, Modelo, Categoria, Ano, Km, Valor)
+        putData(IdCarPut, NewCarroPut)
+            .then((data) => {
+            console.log(data);
+        });
 
         break;
 
@@ -63,11 +66,6 @@ while(Continuar){
     }
 }
 
-// Exemplo De Uso Das Function//
-// putData(3 /*id*/ , NewCarro /*Object*/)
-// .then((data) => {
-//     console.log(data);
-// });
 
 
 function Get(){
@@ -79,7 +77,23 @@ function Get(){
 function GetElementById(id: number){
     fetch(`https://apigenerator.dronahq.com/api/_QipxZpA/CRUDDoDev/${id}`)
     .then((response) => response.json())
-    .then((data) => console.log(data));
+    .then((data) => {
+        if(data.id == id){
+            const Marca = data.Marca
+            const Modelo = data.Modelo
+            const Ano = data.Ano
+            const Valor = data.Valor
+
+            const CarroPropriedades = {
+                Marca: Marca,
+                Modelo: Modelo,
+                Ano: Ano,
+                Valor: Valor,
+            }
+            console.log(CarroPropriedades)
+        }
+    });
+
 }
 
 function GetCarList(){
